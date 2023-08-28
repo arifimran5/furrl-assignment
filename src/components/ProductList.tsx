@@ -157,7 +157,13 @@ function ShareModal({
         <Dialog.Overlay className='bg-gray-800/5 inset-0 fixed z-[100]' />
         <Dialog.Content className='fixed top-[50%] z-[200] left-[50%] max-h-[85vh] w-[90vw] max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded-[6px] bg-white p-[25px]'>
           <h1 className='text-xl font-medium mb-1'>Share Link</h1>
-          <p>{`${process.env.NEXT_PUBLIC_SITE_URL}/products/${id}`} </p>
+          <p>
+            {`${
+              process.env.VERCEL_URL
+                ? process.env.VERCEL_URL
+                : 'http://localhost:3000'
+            }/products/${id}`}{' '}
+          </p>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
