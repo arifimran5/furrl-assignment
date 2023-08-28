@@ -159,8 +159,8 @@ function ShareModal({
           <h1 className='text-xl font-medium mb-1'>Share Link</h1>
           <p>
             {`${
-              process.env.VERCEL_URL
-                ? process.env.VERCEL_URL
+              process.env.NEXT_PUBLIC_VERCEL_URL
+                ? process.env.NEXT_PUBLIC_VERCEL_URL
                 : 'http://localhost:3000'
             }/products/${id}`}{' '}
           </p>
