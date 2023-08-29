@@ -19,8 +19,8 @@ export default function RootLayout({
   return (
     <html lang='en' suppressHydrationWarning>
       <body className={inter.className}>
-        <div className='max-w-[30rem] mx-auto'>
-          <header className='flex h-12 sticky border-b-2 border-gray-100/70 z-50 top-0 bg-white justify-between items-center'>
+        <div className='max-w-[23rem] mx-auto'>
+          <header className='flex px-1 h-12 sticky border-b-2 border-gray-100/70 z-50 top-0 bg-white justify-between items-center'>
             <div></div>
             <Link href='/'>
               <h1 className='text-indigo-500 text-2xl font-medium'>Furrl</h1>
