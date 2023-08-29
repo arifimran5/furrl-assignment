@@ -4,11 +4,9 @@ import Image from 'next/image'
 export default function Home() {
   return (
     <main>
-      {/* Parallax Image */}
-
       <div className='relative'>
         <Image
-          className='w-full -z-50 h-[15rem] object-cover object-top'
+          className='w-full -z-50 h-[12rem] object-cover object-top'
           width={300}
           height={200}
           src='https://cdn.furrl.in/vibes/VibeCard-NightFlea12.webp'
