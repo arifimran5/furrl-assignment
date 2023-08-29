@@ -6,12 +6,10 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
-import { Share } from 'lucide-react'
-import Image from 'next/image'
-import Link from 'next/link'
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useInView } from 'react-intersection-observer'
-import * as Dialog from '@radix-ui/react-dialog'
+import { LoadingSkeleton, LoadingSpinner } from './LoadingSkeleton'
+import ProductCard from './ProductCard'
 
 const queryClient = new QueryClient()
 
@@ -42,7 +40,6 @@ const productCategory = ['All', 'Accesories', 'Home', 'Apparel', 'Beauty']
 
 function ProductList() {
   const { ref, inView } = useInView()
-  const [shareOpen, setShareOpen] = useState(false)
 
   const { data, fetchNextPage, isFetchingNextPage, isLoading } =
     useInfiniteQuery(
@@ -60,12 +57,7 @@ function ProductList() {
   }, [inView])
 
   if (isLoading) {
-    return <div>Fetching....</div>
-  }
-
-  function handleShare(e: any) {
-    e.preventDefault()
-    setShareOpen(true)
+    return <LoadingSkeleton />
   }
 
   const total = data?.pages[0].totalStoredProductIdsCount
@@ -95,77 +87,20 @@ function ProductList() {
         {data?.pages.map((page, i) => (
           <span key={i}>
             {page.productData.map((pr: any) => (
-              <Link
-                href={`/products/${pr.id}`}
+              <ProductCard
+                brandName={pr.brandName}
+                id={pr.id}
                 key={pr.id}
-                className='mb-3 cursor-pointer'
-              >
-                <div className='relative'>
-                  <Image
-                    className='aspect-square w-full'
-                    width={200}
-                    height={200}
-                    src={pr.images[0].src}
-                    alt={`product image of ${pr.title}`}
-                  />
-                  <ShareModal
-                    shareOpen={shareOpen}
-                    setShareOpen={setShareOpen}
-                    id={pr.id}
-                  >
-                    <button
-                      onClick={handleShare}
-                      className='bg-gray-600/80 hover:bg-indigo-600/80 transition-colors w-max p-2 z-10 bottom-2 right-2 rounded-full absolute'
-                    >
-                      <Share className='text-white' size={18} />
-                    </button>
-                  </ShareModal>
-                </div>
-                <div className='p-1'>
-                  <p className='text-sm text-gray-500'>{pr.brandName}</p>
-                  <h1 className='text-sm w-max'>
-                    {pr.title.substring(0, 25)}
-                    {pr.title.length > 25 ? '...' : ''}
-                  </h1>
-                  <span className='text-sm text-gray-500'>₹{pr.price}</span>
-                </div>
-              </Link>
+                price={pr.price}
+                title={pr.title}
+                src={pr.images[0].src}
+              />
             ))}
           </span>
         ))}
+        {isFetchingNextPage && <LoadingSpinner />}
         <span ref={ref}></span>
       </section>
     </div>
-  )
-}
-
-function ShareModal({
-  children,
-  id,
-  shareOpen,
-  setShareOpen,
-}: {
-  children: React.ReactNode
-  id: string
-  shareOpen: boolean
-  setShareOpen: Dispatch<SetStateAction<boolean>>
-}) {
-  return (
-    <Dialog.Root open={shareOpen} onOpenChange={setShareOpen}>
-      <Dialog.Trigger asChild>{children}</Dialog.Trigger>
-      <Dialog.Portal>
-        <Dialog.Overlay className='bg-gray-800/5 inset-0 fixed z-[100]' />
-        <Dialog.Content className='fixed top-[50%] z-[200] left-[50%] max-h-[85vh] w-[90vw] max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded-[6px] bg-white p-[25px]'>
-          <h1 className='text-xl font-medium mb-1'>Share Link</h1>
-          <p>
-            {`${
-              process.env.NEXT_PUBLIC_VERCEL_URL
-                ? process.env.NEXT_PUBLIC_VERCEL_URL
-                : 'http://localhost:3000'
-            }/products/${id}`}{' '}
-          </p>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
   )
 }
